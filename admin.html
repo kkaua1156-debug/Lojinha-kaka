@@ -1,52 +1,163 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
   <title>Painel Admin - Estoque</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; background: #0d1b2a; color: white; text-align: center; }
-    .card { background: #1b263b; display: inline-block; padding: 20px; margin: 10px; border-radius: 10px; }
-    button { margin: 5px; padding: 10px; border: none; border-radius: 5px; }
-    .btn-plus { background: green; color: white; }
-    .btn-minus { background: red; color: white; }
+    :root{--bg:#0d1b2a;--card:#1b263b;--text:#f5f7fa}
+    body{margin:0;font-family:Inter, Arial, sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    header{padding:28px 16px;text-align:center}
+    h1{margin:0;font-size:28px}
+
+    /* Login overlay */
+    #loginOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:40}
+    .loginBox{background:#fff;padding:20px;border-radius:8px;color:#111;width:320px;max-width:90%}
+    .loginBox h2{margin:0 0 12px;font-size:18px}
+    .loginBox input{width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:6px;font-size:15px}
+    .loginBox button{width:100%;padding:10px;border:none;border-radius:6px;background:#0b6fbd;color:#fff;font-weight:600;cursor:pointer}
+
+    /* cards grid */
+    #cardsContainer{display:flex;flex-wrap:wrap;gap:16px;padding:18px;justify-content:center}
+    .card{background:var(--card);padding:14px;border-radius:10px;min-width:180px;box-shadow:0 6px 10px rgba(0,0,0,0.3);text-align:center}
+    .card h3{margin:0 0 6px;font-size:18px}
+    .qty{display:block;font-size:18px;margin-bottom:8px}
+    .controls{display:flex;gap:8px;justify-content:center}
+    .controls button{padding:6px 10px;border-radius:6px;border:none;cursor:pointer;font-weight:700}
+    .plus{background:#20c997;color:#fff}
+    .minus{background:#ff6b6b;color:#fff}
+
+    footer{padding:12px;text-align:center;color:#9aa3b2;font-size:13px}
+    @media (max-width:520px){ .card{min-width:140px} }
   </style>
 </head>
 <body>
-  <h1>Painel Admin - Estoque</h1>
+  <header><h1>Painel Admin - Estoque</h1></header>
 
-  <div class="card" data-name="Leopard">
-    <h2>Leopard</h2>
-    <p>Quantidade: <span class="qty">4</span></p>
-    <button class="btn-plus">+</button>
-    <button class="btn-minus">-</button>
+  <!-- overlay de login -->
+  <div id="loginOverlay">
+    <div class="loginBox" role="dialog" aria-modal="true">
+      <h2>Área Administrativa</h2>
+      <input id="adminPass" type="password" placeholder="Digite a senha de administrador" />
+      <button id="loginBtn">Entrar</button>
+    </div>
   </div>
 
-  <!-- pode repetir os cards para Gravity, Venom, etc. -->
+  <!-- container dos cards (invisível até login) -->
+  <main id="mainContent" style="display:none;">
+    <div id="cardsContainer" aria-live="polite"></div>
+    <footer>Altere o estoque aqui. As mudanças são salvas no navegador (localStorage).</footer>
+  </main>
 
   <script>
-    // ======== Proteção por senha ========
-    const senha = prompt("Digite a senha de administrador:");
-    if (senha !== "kaka123") {
-      document.body.innerHTML = "<h2>Acesso negado</h2>";
+  (function(){
+    // -------- Configurações --------
+    const STORAGE_KEY = 'estoqueLojaKaka'; // mesmo key que você pode usar no index.html público
+    const ADMIN_PASS = 'kaka123'; // <--- troque para sua senha real
+    // valores padrão caso não exista nada no storage
+    const defaultItems = [
+      { id: 'Leopard', qty: 4 },
+      { id: 'Gravity', qty: 2 },
+      { id: 'Venom',   qty: 2 },
+      { id: 'Gas',     qty: 2 },
+      { id: 'Shadow',  qty: 1 },
+      { id: 'Yeti',    qty: 1 },
+      { id: 'Mamute',  qty: 2 },
+      { id: 'Control', qty: 2 }
+    ];
+
+    // -------- helpers storage --------
+    function loadData(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return defaultItems.slice(); // clone
+        const parsed = JSON.parse(raw);
+        // se formato estiver errado, retorna padrão
+        if(!Array.isArray(parsed)) return defaultItems.slice();
+        return parsed;
+      } catch(e){ console.warn('Erro ao ler storage:', e); return defaultItems.slice(); }
+    }
+    function saveData(arr){
+      try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+      catch(e){ console.error('Erro ao salvar storage:', e); }
     }
 
-    // ======== Script de edição ========
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.card').forEach(card => {
-        const qtyEl = card.querySelector('.qty');
-        let valor = parseInt(qtyEl.textContent);
+    // -------- render UI --------
+    function renderCards(items){
+      const container = document.getElementById('cardsContainer');
+      container.innerHTML = '';
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.id = item.id;
 
-        card.querySelector('.btn-plus').addEventListener('click', () => {
-          valor++;
-          qtyEl.textContent = valor;
+        const title = document.createElement('h3');
+        title.textContent = item.id;
+        const qty = document.createElement('span');
+        qty.className = 'qty';
+        qty.textContent = `Quantidade: ${item.qty}`;
+        qty.dataset.qty = item.qty;
+
+        const controls = document.createElement('div');
+        controls.className = 'controls';
+
+        const plus = document.createElement('button');
+        plus.className = 'plus';
+        plus.textContent = '+';
+        plus.setAttribute('aria-label', `Aumentar ${item.id}`);
+
+        const minus = document.createElement('button');
+        minus.className = 'minus';
+        minus.textContent = '-';
+        minus.setAttribute('aria-label', `Diminuir ${item.id}`);
+
+        // eventos
+        plus.addEventListener('click', () => {
+          const data = loadData();
+          const it = data.find(x => x.id === item.id);
+          if(it){ it.qty = (it.qty || 0) + 1; saveData(data); renderCards(data); }
+        });
+        minus.addEventListener('click', () => {
+          const data = loadData();
+          const it = data.find(x => x.id === item.id);
+          if(it){ it.qty = Math.max(0, (it.qty || 0) - 1); saveData(data); renderCards(data); }
         });
 
-        card.querySelector('.btn-minus').addEventListener('click', () => {
-          valor = Math.max(0, valor - 1);
-          qtyEl.textContent = valor;
-        });
+        controls.appendChild(plus);
+        controls.appendChild(minus);
+        card.appendChild(title);
+        card.appendChild(qty);
+        card.appendChild(controls);
+        container.appendChild(card);
       });
-    });
+    }
+
+    // -------- login --------
+    const overlay = document.getElementById('loginOverlay');
+    const mainContent = document.getElementById('mainContent');
+    const loginBtn = document.getElementById('loginBtn');
+    const passInput = document.getElementById('adminPass');
+
+    function onLoginAttempt(){
+      const v = passInput.value || '';
+      if(v === ADMIN_PASS){
+        overlay.style.display = 'none';
+        mainContent.style.display = '';
+        // renderiza com dados do storage
+        renderCards(loadData());
+      } else {
+        alert('Senha incorreta');
+        passInput.value = '';
+        passInput.focus();
+      }
+    }
+
+    loginBtn.addEventListener('click', onLoginAttempt);
+    passInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') onLoginAttempt(); });
+
+    // se quiser um comportamento: se já estiver logado (por exemplo, marca em sessionStorage),
+    // você pode pular login. Aqui, por segurança, sempre pede senha.
+  })();
   </script>
 </body>
 </html>
