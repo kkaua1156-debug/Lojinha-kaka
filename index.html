@@ -27,6 +27,12 @@
     text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
   }
+  .card img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 10px;
+  }
   .card h2 {
     margin: 0 0 10px;
   }
@@ -40,16 +46,16 @@
 <h1>Loja do Kaka — Estoque de Frutas</h1>
 <section class="grid" id="frutas"></section>
 <script>
-// Lista de frutas com quantidade inicial
+// Lista de frutas com quantidade inicial e imagem
 const frutas = [
-  { nome: "Leopard", qtd: 4 },
-  { nome: "Gravity", qtd: 2 },
-  { nome: "Venom", qtd: 2 },
-  { nome: "Gas", qtd: 2 },
-  { nome: "Shadow", qtd: 1 },
-  { nome: "Yeti", qtd: 1 },
-  { nome: "Mamute", qtd: 2 },
-  { nome: "Control", qtd: 2 }
+  { nome: "Leopard", qtd: 4, imagem: "https://static.wikia.nocookie.net/blox-fruits/images/7/7e/Leopard_Fruit.png" },
+  { nome: "Gravity", qtd: 2, imagem: "https://static.wikia.nocookie.net/blox-fruits/images/5/5b/Gravity_Fruit.png" },
+  { nome: "Venom", qtd: 2, imagem: "https://static.wikia.nocookie.net/blox-fruits/images/6/60/Venom_Fruit.png" },
+  { nome: "Gas", qtd: 2, imagem: "https://static.wikia.nocookie.net/blox-fruits/images/0/06/Gas_Fruit.png" },
+  { nome: "Shadow", qtd: 1, imagem: "https://static.wikia.nocookie.net/blox-fruits/images/e/e0/Shadow_Fruit.png" },
+  { nome: "Yeti", qtd: 1, imagem: "https://static.wikia.nocookie.net/blox-fruits/images/3/3e/Yeti_Fruit.png" },
+  { nome: "Mamute", qtd: 2, imagem: "https://static.wikia.nocookie.net/blox-fruits/images/2/27/Mammoth_Fruit.png" },
+  { nome: "Control", qtd: 2, imagem: "https://static.wikia.nocookie.net/blox-fruits/images/5/5c/Control_Fruit.png" }
 ];
 
 function render() {
@@ -59,6 +65,7 @@ function render() {
     const div = document.createElement("div");
     div.className = "card";
     div.innerHTML = `
+      <img src="${f.imagem}" alt="${f.nome}" />
       <h2>${f.nome}</h2>
       <div class="qty">Quantidade: ${f.qtd}</div>
     `;
