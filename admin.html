@@ -1,0 +1,7 @@
+<script>
+  const senha = prompt("Digite a senha para editar o estoque:");
+  if (senha !== "kaka123") {
+    // Esconde todos os botões de edição
+    document.querySelectorAll(".btn-plus, .btn-minus").forEach(btn => btn.style.display = "none");
+  }
+</script>
