@@ -1,7 +1,52 @@
-<script>
-  const senha = prompt("Digite a senha para editar o estoque:");
-  if (senha !== "kaka123") {
-    // Esconde todos os botões de edição
-    document.querySelectorAll(".btn-plus, .btn-minus").forEach(btn => btn.style.display = "none");
-  }
-</script>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Admin - Estoque</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #0d1b2a; color: white; text-align: center; }
+    .card { background: #1b263b; display: inline-block; padding: 20px; margin: 10px; border-radius: 10px; }
+    button { margin: 5px; padding: 10px; border: none; border-radius: 5px; }
+    .btn-plus { background: green; color: white; }
+    .btn-minus { background: red; color: white; }
+  </style>
+</head>
+<body>
+  <h1>Painel Admin - Estoque</h1>
+
+  <div class="card" data-name="Leopard">
+    <h2>Leopard</h2>
+    <p>Quantidade: <span class="qty">4</span></p>
+    <button class="btn-plus">+</button>
+    <button class="btn-minus">-</button>
+  </div>
+
+  <!-- pode repetir os cards para Gravity, Venom, etc. -->
+
+  <script>
+    // ======== Proteção por senha ========
+    const senha = prompt("Digite a senha de administrador:");
+    if (senha !== "kaka123") {
+      document.body.innerHTML = "<h2>Acesso negado</h2>";
+    }
+
+    // ======== Script de edição ========
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.card').forEach(card => {
+        const qtyEl = card.querySelector('.qty');
+        let valor = parseInt(qtyEl.textContent);
+
+        card.querySelector('.btn-plus').addEventListener('click', () => {
+          valor++;
+          qtyEl.textContent = valor;
+        });
+
+        card.querySelector('.btn-minus').addEventListener('click', () => {
+          valor = Math.max(0, valor - 1);
+          qtyEl.textContent = valor;
+        });
+      });
+    });
+  </script>
+</body>
+</html>
