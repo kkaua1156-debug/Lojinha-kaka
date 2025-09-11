@@ -5,14 +5,18 @@
   <title>Loja do Kaka — Estoque de Frutas</title>
   <style>
     body {
-      background: #0f172a;
-      color: #f1f5f9;
-      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #f8fafc;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 20px;
     }
     h1 {
       text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #38bdf8;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
     }
     .grid {
       display: grid;
@@ -22,23 +26,35 @@
     }
     .card {
       background: #1e293b;
-      padding: 15px;
-      border-radius: 10px;
+      padding: 20px;
+      border-radius: 15px;
       text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.7);
     }
     .card img {
-      width: 100px;
-      height: 100px;
+      width: 110px;
+      height: 110px;
       object-fit: contain;
       margin-bottom: 10px;
     }
     .card h2 {
       margin: 0 0 10px;
+      font-size: 1.3rem;
+      color: #facc15;
     }
     .qty {
       font-size: 18px;
       margin: 10px 0;
+      font-weight: bold;
+      color: #34d399;
+    }
+    .out {
+      color: #f87171;
     }
   </style>
 </head>
@@ -48,14 +64,17 @@
   <script>
     // Lista de frutas com quantidade inicial e imagem
     const frutas = [
-      { nome: "Leopard", qtd: 4, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/a/a3/Leopard_Fruit.png/revision/latest?cb=20231027115615" },
-      { nome: "Gravity", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/5/5b/Gravity_Fruit.png/revision/latest?cb=20231027115615" },
-      { nome: "Venom", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/6/60/Venom_Fruit.png/revision/latest?cb=20231027115615" },
-      { nome: "Gas", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/0/06/Gas_Fruit.png/revision/latest?cb=20231027115615" },
-      { nome: "Shadow", qtd: 1, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/e/e0/Shadow_Fruit.png/revision/latest?cb=20231027115615" },
-      { nome: "Yeti", qtd: 1, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/3/3e/Yeti_Fruit.png/revision/latest?cb=20231027115615" },
-      { nome: "Mamute", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/2/27/Mammoth_Fruit.png/revision/latest?cb=20231027115615" },
-      { nome: "Control", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/5/5c/Control_Fruit.png/revision/latest?cb=20231027115615" }
+      { nome: "Kitsune", qtd: 0, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/d/d4/Kitsune_Fruit.png/revision/latest" },
+      { nome: "Yeti", qtd: 1, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/3/3e/Yeti_Fruit.png/revision/latest" },
+      { nome: "Gas", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/0/06/Gas_Fruit.png/revision/latest" },
+      { nome: "Leopard", qtd: 4, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/a/a3/Leopard_Fruit.png/revision/latest" },
+      { nome: "Mamute", qtd: 3, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/2/27/Mammoth_Fruit.png/revision/latest" },
+      { nome: "Gravidade", qtd: 3, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/5/5b/Gravity_Fruit.png/revision/latest" },
+      { nome: "Portal", qtd: 3, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/3/3f/Door_Fruit.png/revision/latest" },
+      { nome: "Buddha", qtd: 4, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/2/25/Buddha_Fruit.png/revision/latest" },
+      { nome: "Shadow", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/e/e0/Shadow_Fruit.png/revision/latest" },
+      { nome: "Venom", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/6/60/Venom_Fruit.png/revision/latest" },
+      { nome: "Control", qtd: 3, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/5/5c/Control_Fruit.png/revision/latest" }
     ];
 
     function render() {
@@ -67,7 +86,9 @@
         div.innerHTML = `
           <img src="${f.imagem}" alt="${f.nome}" />
           <h2>${f.nome}</h2>
-          <div class="qty">Quantidade: ${f.qtd}</div>
+          <div class="qty ${f.qtd === 0 ? "out" : ""}">
+            ${f.qtd === 0 ? "Esgotado ❌" : "Quantidade: " + f.qtd}
+          </div>
         `;
         area.appendChild(div);
       });
