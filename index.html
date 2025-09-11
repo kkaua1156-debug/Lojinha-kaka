@@ -6,17 +6,17 @@
   <style>
     body {
       background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: #f8fafc;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f1f5f9;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
     }
     h1 {
       text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+      font-size: 2rem;
+      margin-bottom: 20px;
       color: #38bdf8;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      text-shadow: 0 0 10px #0ea5e9;
     }
     .grid {
       display: grid;
@@ -26,35 +26,35 @@
     }
     .card {
       background: #1e293b;
-      padding: 20px;
-      border-radius: 15px;
+      padding: 15px;
+      border-radius: 12px;
       text-align: center;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.7);
     }
     .card img {
-      width: 110px;
-      height: 110px;
+      width: 100px;
+      height: 100px;
       object-fit: contain;
       margin-bottom: 10px;
     }
     .card h2 {
       margin: 0 0 10px;
-      font-size: 1.3rem;
+      font-size: 20px;
       color: #facc15;
     }
     .qty {
-      font-size: 18px;
-      margin: 10px 0;
-      font-weight: bold;
-      color: #34d399;
+      font-size: 16px;
+      margin: 8px 0;
     }
-    .out {
-      color: #f87171;
+    .price {
+      font-size: 14px;
+      color: #38bdf8;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -62,19 +62,19 @@
   <h1>Loja do Kaka — Estoque de Frutas</h1>
   <section class="grid" id="frutas"></section>
   <script>
-    // Lista de frutas com quantidade inicial e imagem
+    // Lista de frutas com quantidade e imagem
     const frutas = [
-      { nome: "Kitsune", qtd: 0, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/d/d4/Kitsune_Fruit.png/revision/latest" },
-      { nome: "Yeti", qtd: 1, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/3/3e/Yeti_Fruit.png/revision/latest" },
-      { nome: "Gas", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/0/06/Gas_Fruit.png/revision/latest" },
-      { nome: "Leopard", qtd: 4, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/a/a3/Leopard_Fruit.png/revision/latest" },
-      { nome: "Mamute", qtd: 3, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/2/27/Mammoth_Fruit.png/revision/latest" },
-      { nome: "Gravidade", qtd: 3, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/5/5b/Gravity_Fruit.png/revision/latest" },
-      { nome: "Portal", qtd: 3, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/3/3f/Door_Fruit.png/revision/latest" },
-      { nome: "Buddha", qtd: 4, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/2/25/Buddha_Fruit.png/revision/latest" },
-      { nome: "Shadow", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/e/e0/Shadow_Fruit.png/revision/latest" },
-      { nome: "Venom", qtd: 2, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/6/60/Venom_Fruit.png/revision/latest" },
-      { nome: "Control", qtd: 3, imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/5/5c/Control_Fruit.png/revision/latest" }
+      { nome: "Kitsune", qtd: 0, preco: "R$19,50", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/d/d8/Kitsune_Fruit.png" },
+      { nome: "Yeti", qtd: 1, preco: "R$12,50", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/3/3e/Yeti_Fruit.png" },
+      { nome: "Gas", qtd: 2, preco: "R$10,90", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/0/06/Gas_Fruit.png" },
+      { nome: "Leopard", qtd: 4, preco: "R$9,90", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/a/a3/Leopard_Fruit.png" },
+      { nome: "Mamute", qtd: 3, preco: "R$3,90", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/2/27/Mammoth_Fruit.png" },
+      { nome: "Gravity", qtd: 3, preco: "R$2,90", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/5/5b/Gravity_Fruit.png" },
+      { nome: "Portal", qtd: 3, preco: "R$2,90", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/6/61/Portal_Fruit.png" },
+      { nome: "Buddha", qtd: 4, preco: "R$3,90", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/c/c1/Buddha_Fruit.png" },
+      { nome: "Shadow", qtd: 2, preco: "R$2,99", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/e/e0/Shadow_Fruit.png" },
+      { nome: "Venom", qtd: 2, preco: "R$2,99", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/6/60/Venom_Fruit.png" },
+      { nome: "Control", qtd: 3, preco: "R$2,90", imagem: "https://static.wikia.nocookie.net/roblox-blox-piece/images/5/5c/Control_Fruit.png" }
     ];
 
     function render() {
@@ -86,9 +86,8 @@
         div.innerHTML = `
           <img src="${f.imagem}" alt="${f.nome}" />
           <h2>${f.nome}</h2>
-          <div class="qty ${f.qtd === 0 ? "out" : ""}">
-            ${f.qtd === 0 ? "Esgotado ❌" : "Quantidade: " + f.qtd}
-          </div>
+          <div class="qty">Estoque: ${f.qtd}</div>
+          <div class="price">Valor: ${f.preco}</div>
         `;
         area.appendChild(div);
       });
