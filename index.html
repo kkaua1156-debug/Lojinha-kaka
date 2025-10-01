@@ -84,27 +84,29 @@
   <script>
     const STORAGE_KEY = 'estoqueLojaKaka';
 
-    const defaultItems = [
-      { id: 'Leopard', qty: 4, preco: 'R$9,90', imagem: 'images/Leopard_Fruit.webp' },
-      { id: 'Gravity', qty: 2, preco: 'R$2,90', imagem: 'images/Gravity_Fruit.webp' },
-      { id: 'Venom', qty: 2, preco: 'R$2,99', imagem: 'images/Venom_Fruit.webp' },
-      { id: 'Gas', qty: 2, preco: 'R$10,90', imagem: 'images/Gas_Fruit.webp' },
-      { id: 'Shadow', qty: 1, preco: 'R$2,99', imagem: 'images/Shadow_Fruit.webp' },
-      { id: 'Yeti', qty: 1, preco: 'R$12,50', imagem: 'images/Yeti_Fruit.webp' },
-      { id: 'Mamute', qty: 2, preco: 'R$3,90', imagem: 'images/Mammoth_Fruit.webp' },
-      { id: 'Control', qty: 2, preco: 'R$2,90', imagem: 'images/Control_Fruit.webp' }
-    ];
+    // catálogo fixo com preço e imagem
+    const catalogo = {
+      "Leopard": { preco: "R$ 9,90", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/3/36/Leopard_Fruit.webp" },
+      "Gravity": { preco: "R$ 2,90", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/7/7f/Gravity_Fruit.webp" },
+      "Venom":   { preco: "R$ 2,99", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/a/a9/Venom_Fruit.webp" },
+      "Gas":     { preco: "R$ 10,90", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/4/44/Gas_Fruit.webp" },
+      "Shadow":  { preco: "R$ 2,99", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/d/d3/Shadow_Fruit.webp" },
+      "Yeti":    { preco: "R$ 12,50", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/2/2d/Yeti_Fruit.webp" },
+      "Mamute":  { preco: "R$ 3,90", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/1/11/Mammoth_Fruit.webp" },
+      "Control": { preco: "R$ 2,90", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/9/9f/Control_Fruit.webp" }
+    };
 
+    // estoque salvo pelo admin (só tem id e qty)
     function loadData(){
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw) return defaultItems.slice();
+        if(!raw) return [];
         const parsed = JSON.parse(raw);
-        if(!Array.isArray(parsed)) return defaultItems.slice();
+        if(!Array.isArray(parsed)) return [];
         return parsed;
       } catch(e){
         console.warn('Erro ao carregar storage:', e);
-        return defaultItems.slice();
+        return [];
       }
     }
 
@@ -112,14 +114,19 @@
       const frutas = loadData();
       const area = document.getElementById("frutas");
       area.innerHTML = "";
+
       frutas.forEach(f => {
+        const info = catalogo[f.id] || {};
+        const preco = info.preco || "Indefinido";
+        const imagem = info.imagem || "https://via.placeholder.com/100";
+
         const div = document.createElement("div");
         div.className = "card";
         div.innerHTML = `
-          <img src="${f.imagem}" alt="${f.id}" />
+          <img src="${imagem}" alt="${f.id}" />
           <h2>${f.id}</h2>
           <div class="qty">Estoque: ${f.qty}</div>
-          <div class="price">Valor: ${f.preco}</div>
+          <div class="price">Valor: ${preco}</div>
         `;
         area.appendChild(div);
       });
