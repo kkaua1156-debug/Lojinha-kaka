@@ -1,13 +1,10 @@
-[
-  { "nome": "Kitsune", "qtd": 0, "preco": "R$19,50", "imagem": "images/Kitsune_Fruit.webp" },
-  { "nome": "Yeti", "qtd": 1, "preco": "R$12,50", "imagem": "images/Yeti_Fruit.webp" },
-  { "nome": "Gas", "qtd": 2, "preco": "R$10,90", "imagem": "images/Gas_Fruit.webp" },
-  { "nome": "Leopard", "qtd": 4, "preco": "R$9,90", "imagem": "images/Leopard_Fruit.webp" },
-  { "nome": "Mamute", "qtd": 3, "preco": "R$3,90", "imagem": "images/Mammoth_Fruit.webp" },
-  { "nome": "Gravity", "qtd": 3, "preco": "R$2,90", "imagem": "images/Gravity_Fruit.webp" },
-  { "nome": "Portal", "qtd": 3, "preco": "R$2,90", "imagem": "images/Portal_Fruit.webp" },
-  { "nome": "Buddha", "qtd": 4, "preco": "R$3,90", "imagem": "images/Buddha_Fruit.webp" },
-  { "nome": "Shadow", "qtd": 2, "preco": "R$2,99", "imagem": "images/Shadow_Fruit.webp" },
-  { "nome": "Venom", "qtd": 2, "preco": "R$2,99", "imagem": "images/Venom_Fruit.webp" },
-  { "nome": "Control", "qtd": 3, "preco": "R$2,90", "imagem": "images/Control_Fruit.webp" }
-]
+const catalogo = {
+  "Leopard": { preco: "R$ 9,90", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/3/36/Leopard_Fruit.webp" },
+  "Gravity": { preco: "R$ 2,90", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/7/7f/Gravity_Fruit.webp" },
+  "Venom": { preco: "R$ 2,99", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/a/a9/Venom_Fruit.webp" },
+  "Gas": { preco: "R$ 10,90", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/4/44/Gas_Fruit.webp" },
+  "Shadow": { preco: "R$ 2,99", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/d/d3/Shadow_Fruit.webp" },
+  "Yeti": { preco: "R$ 12,50", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/2/2d/Yeti_Fruit.webp" },
+  "Mamute": { preco: "R$ 3,90", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/1/11/Mammoth_Fruit.webp" },
+  "Control": { preco: "R$ 2,90", imagem: "https://static.wikia.nocookie.net/blox-fruits/images/9/9f/Control_Fruit.webp" }
+};
